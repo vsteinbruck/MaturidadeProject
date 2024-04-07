@@ -1,7 +1,3 @@
-//Firebase
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-
 //Configuração initial para utilização o serviço Firebase para registro dos e-mails
 const firebaseConfig = {
     apiKey: "AIzaSyAEqI9_bw_DX8yXbItTJnQG4T0xpIi6S7g",
