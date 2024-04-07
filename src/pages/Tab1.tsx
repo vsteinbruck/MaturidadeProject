@@ -1,54 +1,55 @@
-// EventCalendar.tsx
+// EventList.tsx
 
-import React, { useState } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import React, { useState, useEffect } from 'react';
+import { IonList, IonItem, IonLabel, IonInput, IonButton } from '@ionic/react';
+import { saveEventsToFile, loadEventsFromFile } from './fileUtils'; // Funções para salvar e carregar eventos em um arquivo
 
 interface Event {
-  date: Date;
-  description: string;
+  id: number;
+  title: string;
 }
 
-const EventCalendar: React.FC = () => {
-  const [date, setDate] = useState<Date>(new Date());
+const EventList: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
-  const [newEventDescription, setNewEventDescription] = useState<string>('');
+  const [newEventTitle, setNewEventTitle] = useState<string>('');
+
+  // Carregar eventos do arquivo quando o componente for montado
+  useEffect(() => {
+    const loadEvents = async () => {
+      const loadedEvents = await loadEventsFromFile();
+      if (loadedEvents) {
+        setEvents(loadedEvents);
+      }
+    };
+    loadEvents();
+  }, []);
 
   // Função para adicionar um evento
   const addEvent = () => {
-    const newEvent: Event = { date, description: newEventDescription };
+    const newEvent: Event = { id: Date.now(), title: newEventTitle };
     setEvents([...events, newEvent]);
-    setNewEventDescription('');
-  };
-
-  // Função para renderizar os eventos no calendário
-  const tileContent = ({ date, view }: { date: Date; view: string }) => {
-    if (view === 'month') {
-      const event = events.find(event => event.date.toDateString() === date.toDateString());
-      if (event) {
-        return <p>{event.description}</p>;
-      }
-    }
-    return null;
+    setNewEventTitle('');
+    saveEventsToFile([...events, newEvent]); // Salvar eventos atualizados no arquivo
   };
 
   return (
     <div>
-      <h1>Calendário de Eventos</h1>
-      <Calendar
-        onChange={(value) => setDate(value as Date)}
-        value={date}
-        tileContent={tileContent}
+      <h1>Lista de Eventos</h1>
+      <IonList>
+        {events.map(event => (
+          <IonItem key={event.id}>
+            <IonLabel>{event.title}</IonLabel>
+          </IonItem>
+        ))}
+      </IonList>
+      <IonInput
+        value={newEventTitle}
+        placeholder="Digite o título do evento"
+        onIonChange={(e) => setNewEventTitle(e.detail.value!)}
       />
-      <input
-        type="text"
-        value={newEventDescription}
-        onChange={(e) => setNewEventDescription(e.target.value)}
-        placeholder="Descrição do evento"
-      />
-      <button onClick={addEvent}>Adicionar Evento</button>
+      <IonButton onClick={addEvent}>Adicionar Evento</IonButton>
     </div>
   );
 };
 
-export default EventCalendar;
+export default EventList;

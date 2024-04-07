@@ -11,7 +11,7 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, square, triangle } from 'ionicons/icons';
-import EventCalendar from './pages/Tab1';
+import EventList from './pages/Tab1';
 import RegisterEmailPage from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 
@@ -41,32 +41,32 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/EventCalendar">
-            <EventCalendar />
+          <Route exact path="/EventList">
+            <EventList />
           </Route>
           <Route exact path="/RegisterEmailPage">
             <RegisterEmailPage />
           </Route>
-          <Route path="/tab3">
+          {/* <Route path="/tab3">
             <Tab3 />
-          </Route>
+          </Route> */}
           <Route exact path="/">
-            <Redirect to="/EventCalendar" />
+            <Redirect to="/EventList" />
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="EventCalendar" href="/EventCalendar">
+          <IonTabButton tab="EventList" href="/EventList">
             <IonIcon aria-hidden="true" icon={triangle} />
-            <IonLabel>Calendario de Eventos</IonLabel>
+            <IonLabel>Lista de Eventos</IonLabel>
           </IonTabButton>
           <IonTabButton tab="RegisterEmailPage" href="/RegisterEmailPage">
             <IonIcon aria-hidden="true" icon={ellipse} />
             <IonLabel>Registro de E-mail</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
+          {/* <IonTabButton tab="tab3" href="/tab3">
             <IonIcon aria-hidden="true" icon={square} />
             <IonLabel>Tab 3</IonLabel>
-          </IonTabButton>
+          </IonTabButton> */}
         </IonTabBar>
       </IonTabs>
     </IonReactRouter>

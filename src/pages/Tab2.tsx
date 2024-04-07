@@ -26,7 +26,7 @@ const RegisterEmailPage: React.FC = () => {
       });
       if (response.ok) {
         alert('Email registrado com sucesso!');
-        setEmail('teste');
+        setEmail("");
       } else {
         alert('Erro ao registrar o email. Por favor, tente novamente mais tarde.');
       }
