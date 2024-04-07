@@ -1,25 +1,71 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Tab2.css';
+//Firebase
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+//React
+import React, { useState } from 'react';
+//Ionic
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton } from '@ionic/react';
 
-const Tab2: React.FC = () => {
+//Configuração initial para utilização o serviço Firebase para registro dos e-mails
+const firebaseConfig = {
+  apiKey: "AIzaSyAEqI9_bw_DX8yXbItTJnQG4T0xpIi6S7g",
+  authDomain: "maturidadeproject.firebaseapp.com",
+  projectId: "maturidadeproject",
+  storageBucket: "maturidadeproject.appspot.com",
+  messagingSenderId: "127397771435",
+  appId: "1:127397771435:web:e6e58e642f608264075fee",
+  measurementId: "G-RX95EDM7PV"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+// Codigo para funcionalidade da TAB de reistro do e-mail
+const RegisterEmailPage: React.FC = () => {
+  const [email, setEmail] = useState<string>('');
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch('https://us-central1-maturidadeproject.cloudfunctions.net/registerEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      if (response.ok) {
+        alert('Email registrado com sucesso!');
+        setEmail('teste');
+      } else {
+        alert('Erro ao registrar o email. Por favor, tente novamente mais tarde.');
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+      alert('Erro ao registrar o email. Por favor, verifique sua conexão e tente novamente.');
+    }
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 2</IonTitle>
+          <IonTitle>Registro de e-mail</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 2</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 2 page" />
+      <IonContent>
+        <form onSubmit={handleSubmit}>
+          <IonInput
+            type="email"
+            value={email}
+            onIonChange={(e) => setEmail(e.detail.value!)}
+            placeholder="Digite seu e-mail"
+            required
+          />
+          <IonButton expand="block" type="submit">Registrar</IonButton>
+        </form>
       </IonContent>
     </IonPage>
   );
 };
 
-export default Tab2;
+export default RegisterEmailPage;
