@@ -1,25 +1,54 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Tab1.css';
+// EventCalendar.tsx
 
-const Tab1: React.FC = () => {
+import React, { useState } from 'react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+
+interface Event {
+  date: Date;
+  description: string;
+}
+
+const EventCalendar: React.FC = () => {
+  const [date, setDate] = useState<Date>(new Date());
+  const [events, setEvents] = useState<Event[]>([]);
+  const [newEventDescription, setNewEventDescription] = useState<string>('');
+
+  // Função para adicionar um evento
+  const addEvent = () => {
+    const newEvent: Event = { date, description: newEventDescription };
+    setEvents([...events, newEvent]);
+    setNewEventDescription('');
+  };
+
+  // Função para renderizar os eventos no calendário
+  const tileContent = ({ date, view }: { date: Date; view: string }) => {
+    if (view === 'month') {
+      const event = events.find(event => event.date.toDateString() === date.toDateString());
+      if (event) {
+        return <p>{event.description}</p>;
+      }
+    }
+    return null;
+  };
+
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Tab 1</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 1</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 1 page" />
-      </IonContent>
-    </IonPage>
+    <div>
+      <h1>Calendário de Eventos</h1>
+      <Calendar
+        onChange={(value) => setDate(value as Date)}
+        value={date}
+        tileContent={tileContent}
+      />
+      <input
+        type="text"
+        value={newEventDescription}
+        onChange={(e) => setNewEventDescription(e.target.value)}
+        placeholder="Descrição do evento"
+      />
+      <button onClick={addEvent}>Adicionar Evento</button>
+    </div>
   );
 };
 
-export default Tab1;
+export default EventCalendar;
